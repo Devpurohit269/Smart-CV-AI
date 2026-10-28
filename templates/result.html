@@ -1,0 +1,404 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Analysis Results | Smart CV AI</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #f6f7fc;
+            color: #191d35;
+            font-family: "DM Sans", sans-serif;
+        }
+
+        .results-page {
+            max-width: 1080px;
+            padding-top: 45px;
+            padding-bottom: 60px;
+        }
+
+        .back-link {
+            color: #7057ed;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .eyebrow {
+            margin-top: 28px;
+            margin-bottom: 12px;
+            color: #7057ed;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .page-title {
+            margin-bottom: 8px;
+            font-family: "Manrope", sans-serif;
+            font-size: clamp(30px, 5vw, 42px);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+        }
+
+        .subtitle {
+            margin-bottom: 28px;
+            color: #7d8299;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .result-card {
+            height: 100%;
+            padding: 26px;
+            border: 1px solid #e8e9f2;
+            border-radius: 19px;
+            background: #fff;
+            box-shadow: 0 12px 35px #25294a08;
+        }
+
+        .section-label {
+            color: #858ba0;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+
+        .score-number {
+            margin-top: 14px;
+            color: #191d35;
+            font-family: "Manrope", sans-serif;
+            font-size: clamp(48px, 7vw, 65px);
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.2;
+        }
+
+        .score-number span {
+            color: #7057ed;
+            font-size: 25px;
+            letter-spacing: 0;
+        }
+
+        .progress {
+            height: 9px;
+            margin-top: 22px;
+            border-radius: 20px;
+            background: #ececf5;
+        }
+
+        .progress-bar {
+            border-radius: 20px;
+            background: linear-gradient(90deg, #7057ed, #a087ff);
+        }
+
+        .score-caption {
+            margin-top: 16px;
+            margin-bottom: 0;
+            color: #858ba0;
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .score-note {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 7px 10px;
+            border-radius: 8px;
+            background: #f0edff;
+            color: #6550cf;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .result-card h2 {
+            margin-top: 18px;
+            margin-bottom: 8px;
+            font-family: "Manrope", sans-serif;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .section-description {
+            margin-bottom: 17px;
+            color: #858ba0;
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill {
+            display: inline-block;
+            padding: 8px 11px;
+            border: 1px solid #d8f0e3;
+            border-radius: 9px;
+            background: #effaf4;
+            color: #18784f;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .skill.missing {
+            border-color: #ffe3c3;
+            background: #fff6eb;
+            color: #a45b13;
+        }
+
+        .empty-state {
+            padding: 14px;
+            border: 1px dashed #e2e3ef;
+            border-radius: 11px;
+            background: #fafaff;
+            color: #858ba0;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .detected-card {
+            margin-top: 20px;
+        }
+
+        .detected-card h2 {
+            margin-top: 12px;
+        }
+
+        .disclaimer {
+            margin-top: 23px;
+            color: #858ba0;
+            font-size: 10px;
+            line-height: 1.9;
+        }
+
+        .primary-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 45px;
+            margin-top: 10px;
+            padding: 0 18px;
+            border: 0;
+            border-radius: 10px;
+            background: linear-gradient(105deg, #7961f2, #6045d9);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .primary-link:hover {
+            background: #5940d4;
+            color: #fff;
+        }
+
+        @media (max-width: 576px) {
+            .results-page {
+                padding-top: 28px;
+            }
+
+            .result-card {
+                padding: 21px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container-fluid results-page">
+
+        <a href="{{ url_for('index') }}" class="back-link">
+            ← Back to analyzer
+        </a>
+
+        <p class="eyebrow">YOUR ANALYSIS REPORT</p>
+
+        <h1 class="page-title">
+            Resume Match <span style="color:#7057ed;">Results</span>
+        </h1>
+
+        <p class="subtitle">
+            Review your resume's text similarity and discover which listed skills
+            match your target job.
+        </p>
+
+        {% set safe_score = [[score|float, 0]|max, 10]|min %}
+
+        <div class="row g-4">
+
+            <!-- SCORE CARD -->
+            <div class="col-lg-5">
+                <section class="result-card">
+
+                    <p class="section-label">Resume match score</p>
+
+                    <div class="score-number">
+                        {{ "%.1f"|format(safe_score) }}<span>/10</span>
+                    </div>
+
+                    <div class="progress"
+                         role="progressbar"
+                         aria-label="Resume text similarity score"
+                         aria-valuenow="{{ safe_score }}"
+                         aria-valuemin="0"
+                         aria-valuemax="10">
+
+                        <div class="progress-bar"
+                             style="width: {{ safe_score * 10 }}%">
+                        </div>
+                    </div>
+
+                    <p class="score-caption">
+                        This score measures text similarity between your resume
+                        and the job description. A higher score indicates more
+                        similar text, not a guaranteed hiring outcome.
+                    </p>
+
+                    <span class="score-note">
+                        Text similarity · Scale 0–10
+                    </span>
+
+                </section>
+            </div>
+
+            <!-- SKILL MATCHING CARD -->
+            <div class="col-lg-7">
+                <section class="result-card">
+
+                    <p class="section-label">Skill breakdown</p>
+
+                    <h2>Matched skills ({{ matched_skills|length }})</h2>
+
+                    <p class="section-description">
+                        Skills detected in both your resume and the job description.
+                    </p>
+
+                    {% if matched_skills %}
+                        <div class="skill-list">
+                            {% for skill in matched_skills %}
+                                <span class="skill">✓ {{ skill }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            No matching skills detected. Check that your resume
+                            contains readable text and review the supported skills list.
+                        </div>
+                    {% endif %}
+
+                    <h2>Skills to consider learning ({{ missing_skills|length }})</h2>
+
+                    <p class="section-description">
+                        Skills found in the job description but not detected in your resume.
+                    </p>
+
+                    {% if missing_skills %}
+                        <div class="skill-list">
+                            {% for skill in missing_skills %}
+                                <span class="skill missing">+ {{ skill }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            No missing skills detected from the current skill list.
+                        </div>
+                    {% endif %}
+
+                </section>
+            </div>
+        </div>
+
+        <!-- RESUME SKILLS -->
+        <section class="result-card detected-card">
+
+            <p class="section-label">Your resume profile</p>
+
+            <h2>Skills detected in your resume</h2>
+
+            <p class="section-description">
+                These are the skills recognized by the application's current skill dictionary.
+            </p>
+
+            {% if resume_skills %}
+                <div class="skill-list">
+                    {% for skill in resume_skills %}
+                        <span class="skill">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    No skills were detected. Try a text-based PDF or DOCX resume,
+                    and verify that the skills you mention are included in the
+                    application's skill dictionary.
+                </div>
+            {% endif %}
+
+        </section>
+
+
+        <!-- ATS READINESS CHECKS: heuristic checks, not an official ATS score -->
+        <section class="result-card enhanced-card">
+            <p class="section-label">ATS compatibility review</p>
+            <div class="ats-score-row">
+                <div>
+                    <h2>ATS readiness checklist</h2>
+                    <p class="section-description">Heuristic checks based on extracted text. This is not an official score from any applicant-tracking system.</p>
+                </div>
+                <div class="ats-score">{{ ats_report.score }}<span>/100</span></div>
+            </div>
+            <p class="ats-summary">{{ ats_report.passed }} of {{ ats_report.total }} checks passed.</p>
+            <div class="ats-check-grid">
+                {% for check in ats_report.checks %}
+                    <article class="ats-check">
+                        <div class="ats-check-heading">
+                            <strong>{{ check.title }}</strong>
+                            <span class="status-pill status-{{ check.status }}">{{ check.label }}</span>
+                        </div>
+                        <p>{{ check.detail }}</p>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Rule-based suggestions; no external AI service is called -->
+        <section class="result-card enhanced-card">
+            <p class="section-label">Personalized next steps</p>
+            <h2>Resume improvement suggestions</h2>
+            <p class="section-description">These suggestions are generated from simple rules and detected text. Review them and keep every claim truthful.</p>
+            <ol class="suggestion-list">
+                {% for suggestion in suggestions %}
+                    <li>{{ suggestion }}</li>
+                {% endfor %}
+            </ol>
+        </section>
+
+        <p class="disclaimer">
+            Smart CV AI provides informational text-similarity and skill-matching
+            results. It does not guarantee job suitability or predict hiring outcomes.
+        </p>
+
+        <a href="{{ url_for('index') }}" class="primary-link">
+            Analyze another resume &nbsp; →
+        </a>
+
+    </main>
+</body>
+</html>
+
+
